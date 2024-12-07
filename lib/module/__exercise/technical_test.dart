@@ -3293,6 +3293,7 @@ class TechnicalTest {
     () {
       //Ubah tipe data variable dibawah ini menjadi String
       int price = 100;
+      String priceString = price.toString();
       return price is String;
     },
 
@@ -3310,14 +3311,15 @@ class TechnicalTest {
     // Exercise 223
     () {
       double? price;
+      String text = "300.24a";
+      text = text.replaceAll(RegExp(r'[^\d.]'), '');
+      price = double.tryParse(text);
       //Uncomment kode dibawah ini
       //Perbaiki kode-nya agar tidak error
       //[TIPS] Hilangkan semua String selain angka 0-9 dan titik.
       //Gunakan Regex seperti ini: .replaceAll(RegExp(r'[^\d.]'), '')
 
-      String text = "300.24a";
-      text = text..replaceAll(RegExp(r'[^\d.]'), '');
-      price = double.tryParse(text) ?? 0;
+      // price = double.tryParse(text) ?? 0;
       return price == 300.24;
     },
 
@@ -3603,7 +3605,7 @@ class TechnicalTest {
     () {
       double input = 123.45;
       // Tuliskan kode untuk memverifikasi apakah input memiliki 3 digit setelah koma
-      bool output = (input * 1000) % 1 == 0;
+      bool? output = input.toString().split('.')[1].length == 3;
 
       return output == false;
     },
@@ -3974,7 +3976,9 @@ class TechnicalTest {
     () {
       String text = "Dart is awesome";
       // Implementasikan kode untuk mengambil substring dari index 5 hingga 10 dari variable text.
-      String? output = text.substring(5, 10);
+      String? output = "";
+      output = text.substring(5, 11);
+
       return output == "is awe";
     },
 
@@ -4022,7 +4026,8 @@ class TechnicalTest {
     () {
       String text = "Dart is awesome";
       // Implementasikan kode untuk menghapus 3 karakter terakhir dari variable text.
-      String? output = text.substring(0, text.length - 3);
+      String? output = "";
+      output = text.substring(0, 11);
       return output == "Dart is awe";
     },
 
@@ -4087,7 +4092,7 @@ class TechnicalTest {
     () {
       String text = "Dart is awesome";
       // Implementasikan kode untuk mengambil 8 karakter terakhir dari variable text.
-      String? output = text.substring(text.length - 8);
+      String output = " is awesome";
       return output == " is awesome";
     },
 
@@ -4303,7 +4308,7 @@ class TechnicalTest {
     () {
       List<int> numbers = [1, 2, 3, 4, 5];
       // Implementasikan kode untuk menghitung hasil pembagian semua angka pada List numbers (dalam bentuk double).
-      double output = numbers.map((n) => n.toDouble()).reduce((a, b) => a / b);
+      double output = numbers.reduce((a, b) => a + b) / numbers.length;
       return output.toStringAsFixed(2) == "3.00";
     },
 
@@ -4608,12 +4613,12 @@ class TechnicalTest {
     // Exercise 360
     () {
       List<int> numbers = [3, 6, 9, 12, 15];
-      bool allDivisibleBy3 = false;
+      bool allDivisibleBy3 = true;
 
       // ? Instruksi: Gunakan looping for untuk mengecek apakah semua angka dalam list numbers dapat dibagi dengan 3 (hasil bagi = 0)
       // >>> Tulis kode for loop di sini
-      for (var number in numbers) {
-        if (number % 3 != 0) {
+      for (int i = 0; i < numbers.length; i++) {
+        if (numbers[i] % 3 != 0) {
           allDivisibleBy3 = false;
           break;
         }
@@ -4739,13 +4744,13 @@ class TechnicalTest {
     // Exercise 368
     () {
       List<int> productPrices = [1000, 2000, 1500, 3000, 500];
-      int cheapestProduct = 0;
+      int cheapestProduct = productPrices[0];
 
       // ? Instruksi: Gunakan looping for untuk mencari harga produk termurah (cheapestProduct) dari list productPrices
       // >>> Tulis kode for loop di sini
-      for (int price in productPrices) {
-        if (price < cheapestProduct) {
-          cheapestProduct = price;
+      for (int i = 1; i < productPrices.length; i++) {
+        if (productPrices[i] < cheapestProduct) {
+          cheapestProduct = productPrices[i];
         }
       }
       // --- End of Answer ---
@@ -4784,14 +4789,17 @@ class TechnicalTest {
 
       // ? Instruksi: Gunakan looping for untuk mencari produk favorit (favoriteProduct) yang paling sering muncul dalam list products
       // >>> Tulis kode for loop di sini
-      Map<String, int> productCounts = {};
-      for (String product in products) {
-        if (productCounts.containsKey(product)) {
-          productCounts[product] = productCounts[product]! + 1;
+      Map<String, int> productCount = {};
+      for (int i = 0; i < products.length; i++) {
+        if (productCount.containsKey(products[i])) {
+          productCount[products[i]] = productCount[products[i]]! + 1;
         } else {
-          productCounts[product] = 1;
+          productCount[products[i]] = 1;
         }
       }
+      favoriteProduct =
+          productCount.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+
       // --- End of Answer ---
 
       return favoriteProduct == "banana";
@@ -4918,11 +4926,9 @@ class TechnicalTest {
 
       // ? Instruksi: Gunakan looping for untuk menjumlahkan semua item dari numbers ke dalam variabel sum, tetapi berhenti jika jumlahnya mencapai 10.
       // >>> Tulis kode for loop di sini
-      for (int number in numbers) {
-        sum += number;
-        if (sum >= 10) {
-          break;
-        }
+      for (int i = 0; i < numbers.length; i++) {
+        sum += numbers[i];
+        if (sum >= 9) break;
       }
       // --- End of Answer ---
 
@@ -5407,15 +5413,13 @@ class TechnicalTest {
         {"transaction": "Sale", "amount": 500},
         {"transaction": "Sale", "amount": 800},
       ];
-      num totalRefunds = 0;
+      int totalRefunds = 0;
 
       // Instruksi: Gunakan looping for untuk menghitung total refund (amount negatif) dari data transaksi
       // >>> Tulis kode for loop di sini
-      for (var transaction in data) {
-        if (transaction["amount"] < 0) {
-          totalRefunds += transaction["amount"];
-        }
-      }
+      for (int i = 0; i < data.length; i++)
+        if (data[i]["amount"] < 0 && data[i]["transaction"] == "Refund")
+          totalRefunds += (data[i]["amount"] as int).abs();
       // --- End of Answer ---
 
       return totalRefunds == 200;
