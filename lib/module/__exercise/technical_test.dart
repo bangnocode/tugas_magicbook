@@ -3292,8 +3292,7 @@ class TechnicalTest {
     // Exercise 221
     () {
       //Ubah tipe data variable dibawah ini menjadi String
-      int price = 100;
-      String priceString = price.toString();
+      String price = "100";
       return price is String;
     },
 
